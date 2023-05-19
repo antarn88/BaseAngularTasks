@@ -21,7 +21,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   // TODO: Implement this method
   ngOnDestroy(): void {
-    throw new Error('Method not implemented.');
+    // throw new Error('Method not implemented.');
   }
 
   fetchUsers(): void {
@@ -30,7 +30,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.$destroy))
       .subscribe((users: User[]) => {
         this.users = users;
-        console.log(users);
+        // console.log(users);
       });
   }
 }
