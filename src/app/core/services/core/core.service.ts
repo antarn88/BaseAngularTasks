@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, concat, delay, map } from 'rxjs';
 
 import { User } from '../../models/user/user.model';
 
@@ -11,6 +11,17 @@ export class CoreService {
   constructor(private http: HttpClient) {}
 
   getUsers(): Observable<User[]> {
-    return this.http.get<User[]>('https://jsonplaceholder.typicode.com/users');
+    const originalUsers = this.http.get<User[]>(
+      'https://jsonplaceholder.typicode.com/users'
+    );
+
+    const modifiedUsers = originalUsers.pipe(
+      delay(5000),
+      map((users: User[]) =>
+        users.map((user: User) => ({ ...user, name: user.name.toUpperCase() }))
+      )
+    );
+
+    return concat(originalUsers, modifiedUsers);
   }
 }
