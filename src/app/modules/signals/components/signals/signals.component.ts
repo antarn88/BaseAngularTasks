@@ -2,6 +2,8 @@ import {
   Component,
   DestroyRef,
   OnInit,
+  Signal,
+  WritableSignal,
   computed,
   effect,
   inject,
@@ -18,9 +20,11 @@ import { CoreService } from 'src/app/core/services/core/core.service';
   styleUrls: ['./signals.component.scss'],
 })
 export class SignalsComponent implements OnInit {
-  usersSignal = signal<User[]>([]);
-  destroyRef = inject(DestroyRef);
-  names = computed(() => this.usersSignal().map((user: User) => user.name));
+  usersSignal: WritableSignal<User[]> = signal<User[]>([]);
+  destroyRef: DestroyRef = inject(DestroyRef);
+  names: Signal<string[]> = computed(() =>
+    this.usersSignal().map((user: User) => user.name)
+  );
 
   constructor(private coreService: CoreService) {
     // effect(() => this.watchUsersChanges());

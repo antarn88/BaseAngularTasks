@@ -8,7 +8,7 @@ describe('GraphqlComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [GraphqlComponent]
+      declarations: [GraphqlComponent],
     });
     fixture = TestBed.createComponent(GraphqlComponent);
     component = fixture.componentInstance;

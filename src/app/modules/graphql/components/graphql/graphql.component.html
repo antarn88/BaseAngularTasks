@@ -1,4 +1,31 @@
 <div class="graphql-container">
-  <h1>GraphQL</h1>
-  <p>Hamarosan!</p>
+  <div class="d-flex justify-content-center flex-column align-items-center">
+    <h1>GraphQL</h1>
+    <h3>Posztok</h3>
+  </div>
+
+  <div class="d-flex justify-content-center mt-3" *ngIf="loading">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <div class="error-container mt-3" *ngIf="error">
+    <div class="alert alert-danger" role="alert">
+      {{ error.message }}
+    </div>
+  </div>
+
+  <div class="post-container mt-3" *ngIf="!error">
+    <div *ngFor="let post of posts">
+      <div class="border border-secondary mb-3 p-2">
+        <div class="title">
+          <span class="fw-bold">Címe:</span> {{ post.title }}
+        </div>
+        <div class="body">
+          <span class="fw-bold">Tartalma:</span> {{ post.body }}
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
