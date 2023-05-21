@@ -1,0 +1,49 @@
+.skeleton-line {
+  height: 5rem;
+  background: linear-gradient(90deg, #f0f0f0 25%, #f8f8f8 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+  margin-bottom: 2rem;
+}
+
+.create-post-loading {
+  border: 2px dashed orange;
+  animation: create-post-loading-animation 2s linear infinite;
+}
+
+.post {
+  position: relative;
+}
+
+.del-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes create-post-loading-animation {
+  0% {
+    border-color: orange;
+  }
+
+  50% {
+    border-color: transparent;
+  }
+
+  100% {
+    border-color: orange;
+  }
+}

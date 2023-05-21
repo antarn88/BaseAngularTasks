@@ -11,6 +11,7 @@ import {
 import { GraphqlRoutingModule } from './graphql-routing.module';
 import { GraphqlComponent } from './components/graphql/graphql.component';
 import { GraphqlService } from './services/graphql/graphql.service';
+import { ReactiveFormsModule } from '@angular/forms';
 
 const API_URL = 'https://graphqlzero.almansi.me/api';
 
@@ -25,7 +26,7 @@ export const createApollo = (
 
 @NgModule({
   declarations: [GraphqlComponent],
-  imports: [CommonModule, GraphqlRoutingModule],
+  imports: [CommonModule, GraphqlRoutingModule, ReactiveFormsModule],
   exports: [ApolloModule],
   providers: [
     { provide: APOLLO_OPTIONS, useFactory: createApollo, deps: [HttpLink] },
