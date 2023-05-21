@@ -15,12 +15,12 @@ import { UpdatePostResponse } from 'src/app/core/models/post/update-post.respons
 export class GraphqlService {
   constructor(private apollo: Apollo) {}
 
-  getPostList(): Observable<ApolloQueryResult<UserPostsResult>> {
+  getPostList(page: number, limit: number): Observable<ApolloQueryResult<UserPostsResult>> {
     return this.apollo.query<UserPostsResult>({
       query: gql`
-        {
+        query ($options: PageQueryOptions) {
           user(id: 1) {
-            posts {
+            posts(options: $options) {
               data {
                 id
                 title
@@ -31,6 +31,11 @@ export class GraphqlService {
         }
       `,
       fetchPolicy: 'network-only', // Kikapcsolva a cache
+      variables: {
+        options: {
+          paginate: { page, limit }, // Lapozáshoz
+        },
+      },
     });
   }
 

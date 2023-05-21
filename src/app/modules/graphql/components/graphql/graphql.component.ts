@@ -40,7 +40,7 @@ export class GraphqlComponent implements OnInit {
 
   fetchPosts(): void {
     this.graphqlService
-      .getPostList()
+      .getPostList(1, 25) // 1. oldal, max 25 elem
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((result: ApolloQueryResult<UserPostsResult>) => {
         this.posts = result.data.user.posts.data;
