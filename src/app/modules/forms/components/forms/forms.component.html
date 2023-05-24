@@ -1,4 +1,21 @@
 <div class="forms-container">
   <h1>Formok</h1>
-  <p>Hamarosan!</p>
+
+  <div class="typed-form mt-5">
+    <h3>Típusos form</h3>
+    <form [formGroup]="typedForm">
+      <div class="mb-3">
+        <label for="typed-form-name" class="form-label">Név</label>
+        <input type="text" class="form-control" id="typed-form-name" formControlName="name" />
+      </div>
+      <div class="mb-3">
+        <label for="typed-form-email" class="form-label">Email</label>
+        <input type="email" class="form-control" id="typed-form-email" formControlName="email" />
+      </div>
+      <div class="mb-3">
+        <label for="typed-form-age" class="form-label">Kor</label>
+        <input type="number" class="form-control" id="typed-form-age" formControlName="age" />
+      </div>
+    </form>
+  </div>
 </div>
