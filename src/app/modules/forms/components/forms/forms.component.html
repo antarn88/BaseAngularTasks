@@ -18,4 +18,15 @@
       </div>
     </form>
   </div>
+
+  <div class="ng-model-example mt-5">
+    <h3>NgModel lista form nélkül</h3>
+    <div class="form-group">
+      <label for="rabbi" class="form-label">Kedvenc rabbid</label>
+      <select class="form-control" id="rabbi" [(ngModel)]="selectedRabbiValue" (change)="onChangeRabbi($event)">
+        <option value="" selected></option>
+        <option *ngFor="let rabbi of rabbies" [value]="rabbi.value">{{ rabbi.name }}</option>
+      </select>
+    </div>
+  </div>
 </div>
