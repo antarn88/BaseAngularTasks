@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-forms',
@@ -50,5 +50,10 @@ export class FormsComponent implements OnInit {
     const name = this.rabbies.find((rabbi) => rabbi.value === target.value)?.name;
     console.log('Kijelölt rabbi neve:', name || '');
     // console.log('Rabbi azonosító:', target.value);
+  }
+
+  onSubmitTDF(form: NgForm): void {
+    console.log('TDF form értékei:', form.value);
+    form.resetForm();
   }
 }
