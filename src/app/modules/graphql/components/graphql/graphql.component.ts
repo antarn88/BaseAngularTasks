@@ -6,7 +6,7 @@ import { MutationResult } from 'apollo-angular';
 
 import { GraphqlService } from '../../services/graphql/graphql.service';
 import { Post } from 'src/app/core/models/post/post.model';
-import { UserPostsResult } from 'src/app/core/models/post/query-result.model';
+import { PostsResult } from 'src/app/core/models/post/posts-result.model';
 import { CreatePostResponse } from 'src/app/core/models/post/create-post-response.model';
 import { DeletePostResponse } from 'src/app/core/models/post/delete-post-response.model';
 import { UpdatePostResponse } from 'src/app/core/models/post/update-post.response.model';
@@ -42,8 +42,8 @@ export class GraphqlComponent implements OnInit {
     this.graphqlService
       .getPostList(1, 25) // 1. oldal, max 25 elem
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((result: ApolloQueryResult<UserPostsResult>) => {
-        this.posts = result.data.user.posts.data;
+      .subscribe((result: ApolloQueryResult<PostsResult>) => {
+        this.posts = result.data.posts;
         this.loading = result.loading;
         this.error = result.error;
       });
@@ -67,7 +67,7 @@ export class GraphqlComponent implements OnInit {
       .subscribe((result: MutationResult<CreatePostResponse>) => {
         if (result.data?.createPost) {
           this.postForm.reset();
-          this.posts = [result.data.createPost, ...this.posts];
+          this.posts = [...this.posts, result.data.createPost];
         }
         this.createLoading = result.loading;
         this.postForm.enable();
@@ -87,14 +87,18 @@ export class GraphqlComponent implements OnInit {
 
   testUpdatePost(): void {
     setTimeout(() => {
-      const updatedPost: Post = { id: '1', title: 'Frissített post cím!', body: 'Frissített post tartalom!' };
+      const updatedPost: Post = {
+        id: '646faa5b9f42244c1055ba6b',
+        title: 'Frissített post cím!',
+        body: 'Frissített post tartalom!',
+      };
       this.updatePost(updatedPost);
     }, 10000);
   }
 
   onClickDeletePost(postId: string): void {
     this.currentPostId = postId;
-    if (confirm('Biztosan törlöd a postot?') == true) {
+    if (confirm('Biztosan törlöd a postot?')) {
       this.deleteLoading = true;
       this.graphqlService
         .deletePost(postId)
