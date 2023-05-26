@@ -67,7 +67,7 @@ export class GraphqlComponent implements OnInit {
       .subscribe((result: MutationResult<CreatePostResponse>) => {
         if (result.data?.createPost) {
           this.postForm.reset();
-          this.posts = [...this.posts, result.data.createPost];
+          this.posts = [result.data.createPost, ...this.posts];
         }
         this.createLoading = result.loading;
         this.postForm.enable();
@@ -89,8 +89,8 @@ export class GraphqlComponent implements OnInit {
     setTimeout(() => {
       const updatedPost: Post = {
         id: '646faa5b9f42244c1055ba6b',
-        title: 'Frissített post cím!',
-        body: 'Frissített post tartalom!',
+        title: 'Frissített post cím új!',
+        body: 'Frissített post tartalom új!',
       };
       this.updatePost(updatedPost);
     }, 10000);
