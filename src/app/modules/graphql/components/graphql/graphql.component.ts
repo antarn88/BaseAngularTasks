@@ -4,12 +4,12 @@ import { ApolloError, ApolloQueryResult } from '@apollo/client/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MutationResult } from 'apollo-angular';
 
-import { GraphqlService } from '../../services/graphql/graphql.service';
 import { Post } from 'src/app/core/models/post/post.model';
 import { PostsResult } from 'src/app/core/models/post/posts-result.model';
 import { CreatePostResponse } from 'src/app/core/models/post/create-post-response.model';
 import { DeletePostResponse } from 'src/app/core/models/post/delete-post-response.model';
 import { UpdatePostResponse } from 'src/app/core/models/post/update-post.response.model';
+import { GraphqlService } from '../../services/graphql/graphql.service';
 
 @Component({
   selector: 'app-graphql',
