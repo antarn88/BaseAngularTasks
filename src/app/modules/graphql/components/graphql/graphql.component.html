@@ -46,7 +46,7 @@
   </div>
 
   <div class="post-container mt-3" *ngIf="!error">
-    <div *ngIf="!posts.length">
+    <div *ngIf="!posts.length && !loading">
       <div class="alert alert-secondary text-center" role="alert">Nincsenek posztok!</div>
     </div>
 
@@ -65,6 +65,17 @@
         </div>
         <div class="title"><span class="fw-bold">Címe:</span> {{ post.title }}</div>
         <div class="body"><span class="fw-bold">Tartalma:</span> {{ post.body }}</div>
+
+        <button
+          class="btn btn-sm btn-primary edit-button"
+          (click)="onClickEdit(post)"
+          [disabled]="deleteLoading || createLoading"
+          data-bs-toggle="modal"
+          data-bs-target="#editPostModal"
+        >
+          <span *ngIf="!deleteLoading || (deleteLoading && currentPostId !== post.id)" class="fw-bold">✏</span>
+        </button>
+
         <button
           class="btn btn-sm btn-danger del-button"
           (click)="onClickDeletePost(post.id)"
@@ -80,4 +91,51 @@
       </div>
     </div>
   </div>
+
+  <!-- EDIT POST MODAL -->
+  <ng-container>
+    <form [formGroup]="editPostForm">
+      <div
+        class="modal fade"
+        id="editPostModal"
+        tabindex="-1"
+        aria-labelledby="editPostModalLabel"
+        aria-hidden="true"
+        data-bs-backdrop="static"
+        data-bs-keyboard="false"
+      >
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="editPostModalLabel">Post szerkesztése</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <label for="edit-title" class="form-label">Cím <span class="text-danger">*</span></label>
+              <input type="text" class="form-control mb-2" id="edit-title" formControlName="title" />
+
+              <label for="edit-body" class="form-label">Tartalom <span class="text-danger">*</span></label>
+              <textarea id="edit-body" class="form-control" rows="4" formControlName="body"></textarea>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-primary"
+                (click)="updatePost(editPostForm.value)"
+                [disabled]="updateLoading || editPostForm.invalid"
+              >
+                <span *ngIf="updateLoading">
+                  <div class="spinner-border spinner-border-sm" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+                </span>
+                <span> Mentés</span>
+              </button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" [disabled]="updateLoading">Mégse</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </ng-container>
 </div>

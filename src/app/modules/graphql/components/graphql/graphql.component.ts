@@ -11,6 +11,8 @@ import { DeletePostResponse } from 'src/app/core/models/post/delete-post-respons
 import { UpdatePostResponse } from 'src/app/core/models/post/update-post.response.model';
 import { GraphqlService } from '../../services/graphql/graphql.service';
 
+declare const bootstrap: typeof import('bootstrap');
+
 @Component({
   selector: 'app-graphql',
   templateUrl: './graphql.component.html',
@@ -20,11 +22,18 @@ export class GraphqlComponent implements OnInit {
   loading = true;
   createLoading = false;
   deleteLoading = false;
+  updateLoading = false;
   error?: ApolloError;
   posts: Post[] = [];
   currentPostId?: string;
 
   postForm: FormGroup = this.fb.group({
+    title: ['', Validators.required],
+    body: ['', Validators.required],
+  });
+
+  editPostForm: FormGroup = this.fb.group({
+    id: [''],
     title: ['', Validators.required],
     body: ['', Validators.required],
   });
@@ -35,7 +44,6 @@ export class GraphqlComponent implements OnInit {
 
   ngOnInit(): void {
     this.fetchPosts();
-    // this.testUpdatePost();
   }
 
   fetchPosts(): void {
@@ -75,6 +83,7 @@ export class GraphqlComponent implements OnInit {
   }
 
   updatePost(post: Post): void {
+    this.updateLoading = true;
     this.graphqlService
       .updatePost(post)
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -82,18 +91,14 @@ export class GraphqlComponent implements OnInit {
         if (result.data?.updatePost) {
           this.posts = this.posts.map((post: Post) => (post.id === result.data?.updatePost.id ? result.data.updatePost : post));
         }
-      });
-  }
 
-  testUpdatePost(): void {
-    setTimeout(() => {
-      const updatedPost: Post = {
-        id: '646faa5b9f42244c1055ba6b',
-        title: 'Frissített post cím új!',
-        body: 'Frissített post tartalom új!',
-      };
-      this.updatePost(updatedPost);
-    }, 10000);
+        const modalElement = document.getElementById('editPostModal');
+        if (modalElement) {
+          const modal = bootstrap.Modal.getInstance(modalElement);
+          this.updateLoading = result.loading;
+          modal?.hide();
+        }
+      });
   }
 
   onClickDeletePost(postId: string): void {
@@ -110,5 +115,9 @@ export class GraphqlComponent implements OnInit {
           this.deleteLoading = result.loading;
         });
     }
+  }
+
+  onClickEdit(post: Post): void {
+    this.editPostForm.patchValue({ id: post.id, title: post.title, body: post.body });
   }
 }
