@@ -3,6 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ApolloError, ApolloQueryResult } from '@apollo/client/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MutationResult } from 'apollo-angular';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 
 import { Post } from 'src/app/core/models/post/post.model';
 import { PostsResult } from 'src/app/core/models/post/posts-result.model';
@@ -26,6 +27,8 @@ export class GraphqlComponent implements OnInit {
   error?: ApolloError;
   posts: Post[] = [];
   currentPostId?: string;
+  currentPage = 1;
+  pageSize = 25;
 
   postForm: FormGroup = this.fb.group({
     title: ['', Validators.required],
@@ -40,18 +43,23 @@ export class GraphqlComponent implements OnInit {
 
   destroyRef: DestroyRef = inject(DestroyRef);
 
-  constructor(private graphqlService: GraphqlService, private fb: FormBuilder) {}
+  constructor(
+    private graphqlService: GraphqlService,
+    private fb: FormBuilder,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
-    this.fetchPosts();
+    this.subscribeToPageChanges();
   }
 
   fetchPosts(): void {
     this.graphqlService
-      .getPostList(1, 25) // 1. oldal, max 25 elem
+      .getPostList(this.currentPage, this.pageSize)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((result: ApolloQueryResult<PostsResult>) => {
-        this.posts = result.data.posts;
+        this.posts = [...this.posts, ...result.data.posts];
         this.loading = result.loading;
         this.error = result.error;
       });
@@ -75,7 +83,7 @@ export class GraphqlComponent implements OnInit {
       .subscribe((result: MutationResult<CreatePostResponse>) => {
         if (result.data?.createPost) {
           this.postForm.reset();
-          this.posts = [result.data.createPost, ...this.posts];
+          this.router.navigate([], { queryParams: { page: null }, queryParamsHandling: 'merge' });
         }
         this.createLoading = result.loading;
         this.postForm.enable();
@@ -119,5 +127,21 @@ export class GraphqlComponent implements OnInit {
 
   onClickEdit(post: Post): void {
     this.editPostForm.patchValue({ id: post.id, title: post.title, body: post.body });
+  }
+
+  onScroll(): void {
+    this.currentPage++;
+    this.router.navigate([], { queryParams: { page: this.currentPage }, queryParamsHandling: 'merge' });
+  }
+
+  subscribeToPageChanges(): void {
+    this.route.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params: Params) => {
+      this.loading = true;
+      this.currentPage = +params['page'] || 1;
+      if (this.currentPage === 1) {
+        this.posts = [];
+      }
+      this.fetchPosts();
+    });
   }
 }

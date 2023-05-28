@@ -35,17 +35,14 @@
     </form>
   </div>
 
-  <div class="d-flex justify-content-center flex-column mt-3" *ngIf="loading">
-    <div class="skeleton-line"></div>
-    <div class="skeleton-line"></div>
-    <div class="skeleton-line"></div>
-    <div class="skeleton-line"></div>
-    <div class="skeleton-line"></div>
-    <div class="skeleton-line"></div>
-    <div class="skeleton-line"></div>
-  </div>
-
-  <div class="post-container mt-3" *ngIf="!error">
+  <div
+    class="post-container mt-3"
+    *ngIf="!error"
+    infiniteScroll
+    [infiniteScrollDistance]="0.75"
+    [infiniteScrollThrottle]="150"
+    (scrolled)="onScroll()"
+  >
     <div *ngIf="!posts.length && !loading">
       <div class="alert alert-secondary text-center" role="alert">Nincsenek posztok!</div>
     </div>
@@ -90,6 +87,20 @@
         </button>
       </div>
     </div>
+  </div>
+
+  <div class="d-flex justify-content-center flex-column mt-3" *ngIf="loading">
+    <div *ngIf="posts.length >= pageSize; else firstPageLoading" class="skeleton-line"></div>
+    <ng-template #firstPageLoading>
+      <div class="skeleton-line"></div>
+      <div class="skeleton-line"></div>
+      <div class="skeleton-line"></div>
+      <div class="skeleton-line"></div>
+      <div class="skeleton-line"></div>
+      <div class="skeleton-line"></div>
+      <div class="skeleton-line"></div>
+      <div class="skeleton-line"></div>
+    </ng-template>
   </div>
 
   <!-- EDIT POST MODAL -->

@@ -4,6 +4,7 @@ import { APOLLO_OPTIONS, ApolloModule } from 'apollo-angular';
 import { HttpLink } from 'apollo-angular/http';
 import { ApolloClientOptions, InMemoryCache, NormalizedCacheObject } from '@apollo/client/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 import { GraphqlRoutingModule } from './graphql-routing.module';
 import { GraphqlComponent } from './components/graphql/graphql.component';
@@ -20,7 +21,7 @@ export const createApollo = (httpLink: HttpLink): ApolloClientOptions<Normalized
 
 @NgModule({
   declarations: [GraphqlComponent],
-  imports: [CommonModule, GraphqlRoutingModule, ReactiveFormsModule],
+  imports: [CommonModule, GraphqlRoutingModule, ReactiveFormsModule, InfiniteScrollModule],
   exports: [ApolloModule],
   providers: [{ provide: APOLLO_OPTIONS, useFactory: createApollo, deps: [HttpLink] }, GraphqlService],
 })
