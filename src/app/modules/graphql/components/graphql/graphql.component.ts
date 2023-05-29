@@ -20,7 +20,7 @@ declare const bootstrap: typeof import('bootstrap');
   styleUrls: ['./graphql.component.scss'],
 })
 export class GraphqlComponent implements OnInit {
-  loading = true;
+  loading = false;
   createLoading = false;
   deleteLoading = false;
   updateLoading = false;
@@ -29,6 +29,7 @@ export class GraphqlComponent implements OnInit {
   currentPostId?: string;
   currentPage = 1;
   pageSize = 25;
+  firstPageLoaded = false;
 
   postForm: FormGroup = this.fb.group({
     title: ['', Validators.required],
@@ -55,13 +56,16 @@ export class GraphqlComponent implements OnInit {
   }
 
   fetchPosts(): void {
+    this.loading = true;
     this.graphqlService
       .getPostList(this.currentPage, this.pageSize)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((result: ApolloQueryResult<PostsResult>) => {
+        this.currentPage++;
         this.posts = [...this.posts, ...result.data.posts];
         this.loading = result.loading;
         this.error = result.error;
+        this.firstPageLoaded = true;
       });
   }
 
@@ -130,18 +134,21 @@ export class GraphqlComponent implements OnInit {
   }
 
   onScroll(): void {
-    this.currentPage++;
-    this.router.navigate([], { queryParams: { page: this.currentPage }, queryParamsHandling: 'merge' });
+    if (!this.loading) {
+      this.router.navigate([], { queryParams: { page: this.currentPage }, queryParamsHandling: 'merge' });
+    }
   }
 
   subscribeToPageChanges(): void {
     this.route.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params: Params) => {
-      this.loading = true;
       this.currentPage = +params['page'] || 1;
       if (this.currentPage === 1) {
         this.posts = [];
       }
-      this.fetchPosts();
+
+      if (!this.loading) {
+        this.fetchPosts();
+      }
     });
   }
 }

@@ -41,6 +41,8 @@
     infiniteScroll
     [infiniteScrollDistance]="0.75"
     [infiniteScrollThrottle]="150"
+    [immediateCheck]="true"
+    [infiniteScrollDisabled]="!firstPageLoaded"
     (scrolled)="onScroll()"
   >
     <div *ngIf="!posts.length && !loading">
