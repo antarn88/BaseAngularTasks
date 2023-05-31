@@ -4,23 +4,19 @@ import { RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
   {
     path: '',
-    loadChildren: () =>
-      import('./modules/home/home.module').then((m) => m.HomeModule),
+    loadChildren: () => import('./modules/home/home.module').then((m) => m.HomeModule),
   },
   {
     path: 'signals',
-    loadChildren: () =>
-      import('./modules/signals/signals.module').then((m) => m.SignalsModule),
+    loadChildren: () => import('./modules/signals/signals.module').then((m) => m.SignalsModule),
   },
   {
     path: 'forms',
-    loadChildren: () =>
-      import('./modules/forms/forms.module').then((m) => m.FormsModule),
+    loadChildren: () => import('./modules/forms/forms.module').then((m) => m.FormsModule),
   },
   {
     path: 'graphql',
-    loadChildren: () =>
-      import('./modules/graphql/graphql.module').then((m) => m.GraphqlModule),
+    loadChildren: () => import('./modules/graphql/graphql.module').then((m) => m.GraphqlModule),
   },
   {
     path: '**',

@@ -55,7 +55,12 @@ export class GraphqlComponent implements OnInit {
     this.subscribeToPageChanges();
   }
 
-  fetchPosts(): void {
+  fetchPosts(reload = false): void {
+    if (reload) {
+      this.currentPage = 1;
+      this.posts = [];
+      this.router.navigate([], { queryParams: {} });
+    }
     this.loading = true;
     this.graphqlService
       .getPostList(this.currentPage, this.pageSize)
@@ -87,7 +92,7 @@ export class GraphqlComponent implements OnInit {
       .subscribe((result: MutationResult<CreatePostResponse>) => {
         if (result.data?.createPost) {
           this.postForm.reset();
-          this.router.navigate([], { queryParams: { page: null }, queryParamsHandling: 'merge' });
+          this.fetchPosts(true);
         }
         this.createLoading = result.loading;
         this.postForm.enable();
