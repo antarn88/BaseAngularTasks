@@ -1,0 +1,28 @@
+<div class="viewchild-container">
+  <div class="d-flex justify-content-center flex-column align-items-center">
+    <h1>ViewChild/ViewChildren</h1>
+    <h3>ViewChild példa</h3>
+  </div>
+
+  <div class="row mt-5">
+    <div class="card" style="width: 18rem" #staticCard>
+      <div class="card-body">
+        <h5 class="card-title">Static card</h5>
+        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+        <a class="btn btn-primary">Go somewhere</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-5">
+    <h3 class="text-center">Dinamikus kártyák - ViewChildren-nel</h3>
+    <div class="card-container d-flex justify-content-center gap-2 mt-3">
+      <div class="card" style="width: 18rem" *ngFor="let card of cards" #dynamicCard>
+        <div class="card-body">
+          <h5 class="card-title">{{ card.title }}</h5>
+          <p class="card-text">{{ card.content }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

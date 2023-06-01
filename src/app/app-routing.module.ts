@@ -19,6 +19,10 @@ const routes: Routes = [
     loadChildren: () => import('./modules/graphql/graphql.module').then((m) => m.GraphqlModule),
   },
   {
+    path: 'viewchild',
+    loadChildren: () => import('./modules/viewchild/viewchild.module').then((m) => m.ViewchildModule),
+  },
+  {
     path: '**',
     redirectTo: '/',
   },
