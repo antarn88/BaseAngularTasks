@@ -4,6 +4,7 @@ import { ApolloError, ApolloQueryResult, FetchResult } from '@apollo/client/core
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MutationResult } from 'apollo-angular';
 import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 import { Post } from 'src/app/core/models/post/post.model';
 import { PostsResult } from 'src/app/core/models/post/posts-result.model';
@@ -49,7 +50,8 @@ export class GraphqlComponent implements OnInit {
     private graphqlService: GraphqlService,
     private fb: FormBuilder,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -88,8 +90,9 @@ export class GraphqlComponent implements OnInit {
   createPost(): void {
     this.createLoading = true;
     this.postForm.disable();
+    this.currentPostId = this.generateObjectId();
     this.graphqlService
-      .createPost(this.postForm.value)
+      .createPost({ id: this.currentPostId, ...this.postForm.value })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((result: MutationResult<CreatePostResponse>) => {
         if (result.data?.createPost) {
@@ -164,7 +167,20 @@ export class GraphqlComponent implements OnInit {
       .newPostSubscription()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((result: FetchResult<NewPostSubscription>) => {
-        console.log('New post added:', result.data?.newPost);
+        if (this.currentPostId !== result.data?.newPost.id) {
+          this.toastr.info(result.data?.newPost.title, 'Új post érkezett!');
+          console.log('New post added:', result.data?.newPost);
+        }
       });
+  }
+
+  generateObjectId(): string {
+    let timestamp = Math.floor(new Date().getTime() / 1000).toString(16);
+    let randomValue = Math.floor(Math.random() * Math.pow(2, 20)).toString(16);
+    let counter = Math.floor(Math.random() * Math.pow(2, 24)).toString(16);
+    while (timestamp.length < 8) timestamp = '0' + timestamp;
+    while (randomValue.length < 10) randomValue = '0' + randomValue;
+    while (counter.length < 6) counter = '0' + counter;
+    return timestamp + randomValue + counter;
   }
 }

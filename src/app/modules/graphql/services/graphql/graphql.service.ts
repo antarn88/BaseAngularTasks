@@ -51,15 +51,15 @@ export class GraphqlService {
   createPost(post: Post): Observable<MutationResult<CreatePostResponse>> {
     return this.apollo.mutate<CreatePostResponse>({
       mutation: gql`
-        mutation ($title: String!, $body: String!) {
-          createPost(createPostInput: { title: $title, body: $body }) {
+        mutation ($id: String!, $title: String!, $body: String!) {
+          createPost(createPostInput: { id: $id, title: $title, body: $body }) {
             id
             title
             body
           }
         }
       `,
-      variables: { title: post.title, body: post.body },
+      variables: { id: post.id, title: post.title, body: post.body },
     });
   }
 
