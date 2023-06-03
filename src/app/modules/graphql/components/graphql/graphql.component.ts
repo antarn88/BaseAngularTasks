@@ -1,6 +1,6 @@
 import { Component, DestroyRef, OnInit, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ApolloError, ApolloQueryResult } from '@apollo/client/core';
+import { ApolloError, ApolloQueryResult, FetchResult } from '@apollo/client/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MutationResult } from 'apollo-angular';
 import { ActivatedRoute, Params, Router } from '@angular/router';
@@ -11,6 +11,7 @@ import { CreatePostResponse } from 'src/app/core/models/post/create-post-respons
 import { DeletePostResponse } from 'src/app/core/models/post/delete-post-response.model';
 import { UpdatePostResponse } from 'src/app/core/models/post/update-post.response.model';
 import { GraphqlService } from '../../services/graphql/graphql.service';
+import { NewPostSubscription } from 'src/app/core/models/post/new-post-subscription.model';
 
 declare const bootstrap: typeof import('bootstrap');
 
@@ -53,6 +54,7 @@ export class GraphqlComponent implements OnInit {
 
   ngOnInit(): void {
     this.subscribeToPageChanges();
+    this.watchNewPostAddedSubscription();
   }
 
   fetchPosts(reload = false): void {
@@ -155,5 +157,14 @@ export class GraphqlComponent implements OnInit {
         this.fetchPosts();
       }
     });
+  }
+
+  watchNewPostAddedSubscription(): void {
+    this.graphqlService
+      .newPostSubscription()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((result: FetchResult<NewPostSubscription>) => {
+        console.log('New post added:', result.data?.newPost);
+      });
   }
 }
